@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { LessonTypesService } from './lesson-types.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { LessonTypeDto } from 'src/lesson-types/entities/lesson-type.entity';
+import { LessonTypeEntity } from 'src/lesson-types/entities/lesson-type.entity';
 import { prepareResponse } from 'utils/prepareResponse';
 import { QueryLessonTypeDto } from 'src/lesson-types/dto/query-lesson-type.dto';
 
@@ -11,7 +11,7 @@ export class LessonTypesController {
   constructor(private readonly lessonTypesService: LessonTypesService) {}
 
   @Get()
-  @ApiOkResponse({ type: LessonTypeDto, isArray: true })
+  @ApiOkResponse({ type: LessonTypeEntity, isArray: true })
   async findAll(@Query() params: QueryLessonTypeDto) {
     const lessonTypes = await this.lessonTypesService.findAll(params);
     return prepareResponse(lessonTypes);

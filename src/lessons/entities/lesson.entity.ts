@@ -1,13 +1,14 @@
 import { Lesson } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { LessonTypeDto } from 'src/lesson-types/entities/lesson-type.entity';
+import { LessonTypeEntity } from 'src/lesson-types/entities/lesson-type.entity';
+import { ParticipantEntity } from 'src/participants/entities/participant.entity';
 
 export class LessonDto implements Partial<Lesson> {
   @ApiProperty() id: number;
   @ApiProperty() name: string;
   @ApiProperty() startDate: Date;
   @ApiProperty() endDate: Date;
-  // @ApiProperty() lessonTypeId: number;
-  @ApiProperty() participants: any;
-  @ApiProperty({ type: LessonTypeDto }) lessonType: LessonTypeDto;
+  @ApiProperty({ type: ParticipantEntity, isArray: true })
+  participants: ParticipantEntity;
+  @ApiProperty({ type: LessonTypeEntity }) lessonType: LessonTypeEntity;
 }

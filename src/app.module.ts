@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { CoachesModule } from './coaches/coaches.module';
 import { LessonTypesModule } from './lesson-types/lesson-types.module';
 import { LessonsModule } from './lessons/lessons.module';
+import { ParticipantsModule } from './participants/participants.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { LessonsModule } from './lessons/lessons.module';
     CoachesModule,
     LessonTypesModule,
     LessonsModule,
+    ParticipantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
