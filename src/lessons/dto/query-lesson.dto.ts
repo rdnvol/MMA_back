@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsOptional } from 'class-validator';
+import { IsArray, IsDate, IsInt, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -17,23 +17,23 @@ export class QueryLessonDto {
   @Transform(({ value }) => new Date(value))
   public endDate: Date;
 
-  @ApiProperty({ name: 'coaches', type: String, example: '[1,2,3]' })
+  @ApiProperty({ name: 'coaches', type: [Number] })
   @ApiPropertyOptional()
   @IsOptional()
   @IsArray()
-  @Transform(({ value }) => {
-    try {
-      return JSON.parse(value);
-    } catch (e) {
-      return 'test';
-    }
-  })
+  @IsInt({ each: true })
+  @Transform(({ value }) =>
+    Array.isArray(value) ? value.map((id) => parseInt(id)) : [Number(value)],
+  )
   public coaches: number[];
 
-  @ApiProperty({ name: 'types', type: String, example: '[1,2,3]' })
+  @ApiProperty({ name: 'types', type: [Number] })
   @ApiPropertyOptional()
   @IsOptional()
   @IsArray()
-  @Transform(({ value }) => JSON.parse(value))
+  @IsInt({ each: true })
+  @Transform(({ value }) =>
+    Array.isArray(value) ? value.map((id) => parseInt(id)) : [Number(value)],
+  )
   public types: number[];
 }

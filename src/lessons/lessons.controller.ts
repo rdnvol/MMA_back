@@ -29,9 +29,7 @@ export class LessonsController {
   @Get()
   @ApiOkResponse({ type: LessonDto })
   async findAll(@Query() params: QueryLessonDto) {
-    console.log('params', params);
     const resp = await this.lessonsService.findAll(params);
-    console.log('resp');
     return prepareResponse(resp);
   }
 
@@ -42,10 +40,9 @@ export class LessonsController {
     );
 
     if (!lessonType) {
-      throw new NotFoundException('Lesson type is is not found');
+      throw new NotFoundException('Lesson type is not found');
     }
 
-    console.log('lessonType', lessonType);
     return this.lessonsService.create(createLessonDto);
   }
 
