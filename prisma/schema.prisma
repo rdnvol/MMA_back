@@ -16,6 +16,7 @@ model Coach {
   email      String       @unique
   name       String       @unique
   LessonType LessonType[]
+  lessons    Lesson[]
 }
 
 model Participant {
@@ -33,6 +34,7 @@ model Lesson {
   participants Participant[]
   startDate    DateTime
   endDate      DateTime
+  coachOrder   Coach[]
 }
 
 model LessonType {

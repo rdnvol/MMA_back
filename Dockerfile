@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:14-alpine
 
 WORKDIR /app
 
@@ -10,6 +10,7 @@ RUN yarn install --production
 # Copy application files
 COPY . .
 
+RUN yarn build
 # Install Prisma CLI
 RUN yarn global add prisma ts-node typescript
 

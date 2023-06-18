@@ -11,4 +11,5 @@ export class LessonDto implements Partial<Lesson> {
   @ApiProperty({ type: ParticipantEntity, isArray: true })
   participants: ParticipantEntity;
   @ApiProperty({ type: LessonTypeEntity }) lessonType: LessonTypeEntity;
+  @ApiProperty() coachOrder: string[];
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLessonTypeDto } from './dto/create-lesson-type.dto';
 import { UpdateLessonTypeDto } from './dto/update-lesson-type.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QueryLessonTypeDto } from 'src/lesson-types/dto/query-lesson-type.dto';
@@ -7,10 +6,6 @@ import { QueryLessonTypeDto } from 'src/lesson-types/dto/query-lesson-type.dto';
 @Injectable()
 export class LessonTypesService {
   constructor(private prisma: PrismaService) {}
-
-  create(createLessonTypeDto: CreateLessonTypeDto) {
-    return 'This action adds a new lessonType';
-  }
 
   findAll({ coaches, type }: QueryLessonTypeDto) {
     return this.prisma.lessonType.findMany({
@@ -36,7 +31,11 @@ export class LessonTypesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} lessonType`;
+    return this.prisma.lessonType.findFirstOrThrow({
+      where: {
+        id,
+      },
+    });
   }
 
   update(id: number, updateLessonTypeDto: UpdateLessonTypeDto) {

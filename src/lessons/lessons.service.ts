@@ -9,7 +9,14 @@ export class LessonsService {
   constructor(private prisma: PrismaService) {}
 
   create(createLessonDto: CreateLessonDto) {
-    return 'This action adds a new lesson';
+    return this.prisma.lesson.create({
+      data: {
+        name: createLessonDto.name,
+        lessonTypeId: createLessonDto.lessonTypeId,
+        startDate: createLessonDto.startDate,
+        endDate: createLessonDto.endDate,
+      },
+    });
   }
 
   findAll(params: QueryLessonDto) {
@@ -31,6 +38,7 @@ export class LessonsService {
         name: true,
         startDate: true,
         endDate: true,
+        coachOrder: true,
         participants: {
           select: {
             name: true,
@@ -60,10 +68,23 @@ export class LessonsService {
   }
 
   update(id: number, updateLessonDto: UpdateLessonDto) {
-    return `This action updates a #${id} lesson`;
+    return this.prisma.lesson.update({
+      where: {
+        id,
+      },
+      data: {
+        name: updateLessonDto.name,
+        startDate: updateLessonDto.startDate,
+        endDate: updateLessonDto.endDate,
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} lesson`;
+    this.prisma.lesson.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
