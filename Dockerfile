@@ -14,4 +14,4 @@ COPY . .
 RUN yarn global add prisma ts-node typescript
 
 # Start Prisma server and Nest.js application
-CMD prisma migrate deploy && prisma db push && prisma db seed && yarn start:prod
+CMD prisma migrate deploy && yarn start:prod
