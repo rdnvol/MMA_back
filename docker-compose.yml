@@ -2,24 +2,35 @@ version: '3'
 
 services:
   db:
-    image: postgres:13
+    image: postgres:14
+    restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: node
+      POSTGRES_PASSWORD: node
       POSTGRES_DB: mydatabase
+    ports:
+      - '5432:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: "cloudbeaver"
+    restart: always
     ports:
-      - "8080:80"
+      - '8080:8978'
+    volumes:
+      - cloudbeaver:/opt/cloudbeaver/workspace
 
   api:
-    build: .
+    build:
+      context: .
+      target: production
+    restart: always
+    volumes:
+      - .:/usr/src/app
+      - .:/usr/src/app/node_module
+    command: npm run start:dev
     ports:
       - "3005:3005"
     depends_on:
@@ -34,3 +45,4 @@ services:
 
 volumes:
   db_data:
+  cloudbeaver:

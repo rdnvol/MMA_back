@@ -61,7 +61,7 @@ This will create 3 containers:
 
 By default it creates empty db. To seed the db you need to run next command:
 ```bash
-docker-compose exec api prisma db seed  
+docker-compose exec api npx prisma db seed  
 ```
 
 To drop db you need to run next command:
