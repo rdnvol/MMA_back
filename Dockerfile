@@ -3,6 +3,7 @@
 ###################
 
 FROM node:18-alpine As development
+RUN apk update && apk add python3 make g++
 
 # Create app directory
 WORKDIR /usr/src/app

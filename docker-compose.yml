@@ -25,7 +25,7 @@ services:
   api:
     build:
       context: .
-      target: production
+      target: development
     restart: always
     volumes:
       - .:/usr/src/app
