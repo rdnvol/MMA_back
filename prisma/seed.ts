@@ -7,32 +7,11 @@ import { CoachBusyLevel, CoachesName, LessonType } from '../types';
 const prisma = new PrismaClient();
 
 async function generateCoaches() {
-  const res = await prisma.coach.createMany({
+  await prisma.coach.createMany({
     data: [
-      { name: 'Vika', email: 'test@vika.com' },
-      { name: 'Sasha', email: 'test@sasha.com' },
+      { name: CoachesName.Vika, email: 'test@vika.com' },
+      { name: CoachesName.Sasha, email: 'test@sasha.com' },
     ],
-  });
-
-  console.log({ res });
-}
-
-async function generateLessonTypesForCoach(
-  coach: CoachesName,
-  busyLevel: CoachBusyLevel,
-) {
-  const coachSasha = await prisma.coach.findUnique({
-    where: { name: coach },
-  });
-
-  Object.values(LessonType).map(async (lessonType) => {
-    return prisma.lessonType.create({
-      data: {
-        type: lessonType,
-        coaches: { connect: [{ id: coachSasha.id }] },
-        coachBusyLevel: busyLevel,
-      },
-    });
   });
 }
 
@@ -51,6 +30,105 @@ async function generateParticipants() {
       { name: 'Ava Garcia', email: 'ava.garcia@example.com' },
     ],
   });
+}
+
+async function generateLessonTypes() {
+  const coachVika = await prisma.coach.findUnique({
+    where: { name: CoachesName.Vika },
+  });
+
+  const coachSasha = await prisma.coach.findUnique({
+    where: { name: CoachesName.Sasha },
+  });
+
+  const lessonTypes = [
+    // Sasha's lessons
+    {
+      type: LessonType.Personal,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachSasha.id],
+    },
+    {
+      type: LessonType.Group,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachSasha.id],
+    },
+    {
+      type: LessonType.Split,
+      coachBusyLevel: CoachBusyLevel.Half,
+      coaches: [coachSasha.id],
+    },
+    {
+      type: LessonType.Massage,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachSasha.id],
+    },
+    {
+      type: LessonType.Other,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachSasha.id],
+    },
+
+    // Vika's lessons
+    {
+      type: LessonType.Personal,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachVika.id],
+    },
+    {
+      type: LessonType.Group,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachVika.id],
+    },
+    {
+      type: LessonType.Split,
+      coachBusyLevel: CoachBusyLevel.Half,
+      coaches: [coachVika.id],
+    },
+    {
+      type: LessonType.Massage,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachVika.id],
+    },
+    {
+      type: LessonType.Other,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachVika.id],
+    },
+
+    // Shared lessons
+    {
+      type: LessonType.Personal,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachSasha.id, coachVika.id],
+    },
+    {
+      type: LessonType.Group,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachSasha.id, coachVika.id],
+    },
+    {
+      type: LessonType.Other,
+      coachBusyLevel: CoachBusyLevel.Full,
+      coaches: [coachSasha.id, coachVika.id],
+    },
+  ];
+
+  console.log(lessonTypes);
+
+  return Promise.all(
+    lessonTypes.map((lessonType) => {
+      return prisma.lessonType.create({
+        data: {
+          type: lessonType.type,
+          coachBusyLevel: lessonType.coachBusyLevel,
+          coaches: {
+            connect: lessonType.coaches.map((coachId) => ({ id: coachId })),
+          },
+        },
+      });
+    }),
+  );
 }
 
 async function generateLessons() {
@@ -121,41 +199,9 @@ async function generateLessons() {
 
 async function main() {
   await generateCoaches();
-  await generateLessonTypesForCoach(CoachesName.Sasha, CoachBusyLevel.Full);
-  await generateLessonTypesForCoach(CoachesName.Sasha, CoachBusyLevel.Half);
-  await generateLessonTypesForCoach(CoachesName.Vika, CoachBusyLevel.Half);
-  await generateLessonTypesForCoach(CoachesName.Vika, CoachBusyLevel.Full);
   await generateParticipants();
-  await generateLessons();
-
-  const lessons = await prisma.lesson.findMany({
-    select: {
-      id: true,
-      name: true,
-      startDate: true,
-      endDate: true,
-      participants: {
-        select: {
-          name: true,
-          email: true,
-        },
-      },
-      lessonType: {
-        select: {
-          id: true,
-          coaches: {
-            select: {
-              name: true,
-              email: true,
-            },
-          },
-          coachBusyLevel: true,
-          type: true,
-        },
-      },
-    },
-  });
-  console.log(lessons);
+  await generateLessonTypes();
+  // await generateLessons();
 }
 
 // execute the main function
