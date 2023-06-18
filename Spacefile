@@ -1,0 +1,13 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+  - name: mma-app-back
+    src: .
+    engine: nodejs16
+    primary: true
+    commands:
+      - npm run build
+    include:
+      - dist
+      - .env
+    run: "node dist/src/main.js"

@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin", "debian-openssl-1.1.x", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Coach {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  name       String       @unique
+  LessonType LessonType[]
+}
+
+model Participant {
+  id     Int      @id @default(autoincrement())
+  email  String   @unique
+  name   String
+  Lesson Lesson[]
+}
+
+model Lesson {
+  id           Int           @id @default(autoincrement())
+  lessonType   LessonType    @relation(fields: [lessonTypeId], references: [id])
+  name         String
+  lessonTypeId Int
+  participants Participant[]
+  startDate    DateTime
+  endDate      DateTime
+}
+
+model LessonType {
+  id             Int      @id @default(autoincrement())
+  type           String
+  coaches        Coach[]
+  coachBusyLevel String
+  Lesson         Lesson[]
+}
