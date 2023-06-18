@@ -81,7 +81,7 @@ export class LessonsService {
   }
 
   remove(id: number) {
-    this.prisma.lesson.delete({
+    return this.prisma.lesson.delete({
       where: {
         id,
       },
