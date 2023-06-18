@@ -6,7 +6,7 @@ export class QueryLessonDto {
   @ApiProperty({ name: 'startDate', type: String, example: '2023-03-25' })
   @ApiPropertyOptional()
   @IsOptional()
-  @Transform(({ value }) => new Date(value))
+  @Transform(({ value }) => new Date(value).setHours(0, 0, 0, 0))
   @IsDate()
   public startDate: Date;
 
@@ -14,7 +14,7 @@ export class QueryLessonDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsDate()
-  @Transform(({ value }) => new Date(value))
+  @Transform(({ value }) => new Date(value).setHours(23, 59, 59, 999))
   public endDate: Date;
 
   @ApiProperty({ name: 'coaches', type: [Number] })
